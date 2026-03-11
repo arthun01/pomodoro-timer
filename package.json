@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-timer",
-  "main": "expo/AppEntry.js",
+  "main": "src/index.ts",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
