@@ -4,6 +4,9 @@ import { useFonts } from 'expo-font';
 import AppRoutes from './AppRoutes';
 
 import { useEffect } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Theme } from './shared/themes/Theme';
+import { StatusBar } from 'expo-status-bar';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,5 +27,10 @@ export default function App() {
     return null;
   }
 
-  return <AppRoutes />;
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: Theme.colors.background }}>
+      <StatusBar style='light' />
+      <AppRoutes />
+    </SafeAreaView>
+  );
 }
