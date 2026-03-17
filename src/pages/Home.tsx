@@ -12,124 +12,125 @@ export const Home = () => {
     const navigation = useNavigation<TNavigationScreenProps>();
 
     return (
-        <View style={styles.container}>
+        <View style={styles.mainContainer}>
             {/* Botão Settings */}
-            <View style={styles.mainContainer}>
-                <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('Settings')}>
-                    <Ionicons name="settings" size={28} color={Theme.colors.divider} />
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('Settings')}>
+                <Ionicons name="settings" size={28} color={Theme.colors.divider} />
+            </TouchableOpacity>
 
-            {/* Título, States e Progress */}
-            <View style={styles.titleGroup}>
-                {/* TÍTULO */}
-                <View style={styles.titleContainer}>
-                    <Text style={styles.titleText}>
-                        ZenFocus
-                    </Text>
+            <View style={styles.container}>
+
+                {/* Título, States e Progress */}
+                <View style={styles.titleGroup}>
+                    {/* TÍTULO */}
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.titleText}>
+                            ZenFocus
+                        </Text>
+                    </View>
+
+                    {/* STATES */}
+                    <View>
+                        <View style={styles.stateContainer}>
+                            <Text style={styles.stateText}>
+                                Vamos nos concentrar?
+                            </Text>
+                        </View>
+
+                        <View style={styles.stateContainer}>
+                            <Text style={styles.stateText}>
+                                Hora de se concentrar!
+                            </Text>
+                        </View>
+
+                        <View style={styles.stateContainer}>
+                            <Text style={styles.stateText}>
+                                Pausa curta
+                            </Text>
+                        </View>
+
+                        <View style={styles.stateContainer}>
+                            <Text style={styles.stateText}>
+                                Pausa longa
+                            </Text>
+                        </View>
+
+                        <View style={styles.stateContainer}>
+                            <Text style={styles.stateText}>
+                                Cronômetro em pausa
+                            </Text>
+                        </View>
+                    </View>
+
+                    {/* PROGRESS */}
+                    <View style={styles.progressContainer}>
+                        <AnimatedCircularProgress
+                        size={160}
+                        width={8}
+                        fill={43}
+                        tintColor={Theme.colors.divider}
+                        rotation={0}
+                        backgroundColor={Theme.colors.primary}
+                        children={() => (
+                            <Text style={styles.progressText}>
+                                12:45
+                            </Text>
+                        )}
+                        />
+                    </View>
                 </View>
 
-                {/* STATES */}
-                <View>
-                    <View style={styles.stateContainer}>
-                        <Text style={styles.stateText}>
-                            Vamos nos concentrar?
+                {/* Botão Iniciar */}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.primaryButton}>
+                        <Text style={styles.primaryButtonText}>
+                            Iniciar
                         </Text>
-                    </View>
-
-                    <View style={styles.stateContainer}>
-                        <Text style={styles.stateText}>
-                            Hora de se concentrar!
-                        </Text>
-                    </View>
-
-                    <View style={styles.stateContainer}>
-                        <Text style={styles.stateText}>
-                            Pausa curta
-                        </Text>
-                    </View>
-
-                    <View style={styles.stateContainer}>
-                        <Text style={styles.stateText}>
-                            Pausa longa
-                        </Text>
-                    </View>
-
-                    <View style={styles.stateContainer}>
-                        <Text style={styles.stateText}>
-                            Cronômetro em pausa
-                        </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
-                {/* PROGRESS */}
-                <View style={styles.progressContainer}>
-                    <AnimatedCircularProgress
-                    size={160}
-                    width={8}
-                    fill={43}
-                    tintColor={Theme.colors.divider}
-                    rotation={0}
-                    backgroundColor={Theme.colors.primary}
-                    children={() => (
-                        <Text style={styles.progressText}>
-                            12:45
+                {/* Botôes Pausar e Parar */}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.primaryButton}>
+                        <Text style={styles.primaryButtonText}>
+                            Pausar
                         </Text>
-                    )}
-                    />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.secondaryButton}>
+                        <Text style={styles.secondaryButtonText}>
+                            Parar
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
 
-            {/* Botão Iniciar */}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.primaryButton}>
-                    <Text style={styles.primaryButtonText}>
-                        Iniciar
+                {/* Botôes Continuar e Reiniciar */}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.primaryButton}>
+                        <Text style={styles.primaryButtonText}>
+                            Continuar
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.secondaryButton}>
+                        <Text style={styles.secondaryButtonText}>
+                            Reiniciar
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Pomodoros */}
+                <View style={styles.pomodorosContainer}>
+                    <Text style={styles.pomodorosText}>
+                        Pomodoros: 
                     </Text>
-                </TouchableOpacity>
-            </View>
 
-            Botôes Pausar e Parar
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.primaryButton}>
-                    <Text style={styles.primaryButtonText}>
-                        Pausar
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.secondaryButton}>
-                    <Text style={styles.secondaryButtonText}>
-                        Parar
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-            {/* Botôes Continuar e Reiniciar */}
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.primaryButton}>
-                    <Text style={styles.primaryButtonText}>
-                        Continuar
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.secondaryButton}>
-                    <Text style={styles.secondaryButtonText}>
-                        Reiniciar
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-            {/* Pomodoros */}
-            <View style={styles.pomodorosContainer}>
-                <Text style={styles.pomodorosText}>
-                    Pomodoros: 
-                </Text>
-
-                <View style={styles.pomodorosIndicatorComplete} />
-                <View style={styles.pomodorosIndicatorComplete} />
-                <View style={styles.pomodorosIndicatorComplete} />
-                <View style={styles.pomodorosIndicatorIncomplete} />
-                <View style={styles.pomodorosIndicatorIncomplete} />
+                    <View style={styles.pomodorosIndicatorComplete} />
+                    <View style={styles.pomodorosIndicatorComplete} />
+                    <View style={styles.pomodorosIndicatorComplete} />
+                    <View style={styles.pomodorosIndicatorIncomplete} />
+                    <View style={styles.pomodorosIndicatorIncomplete} />
+                </View>
             </View>
         </View>
     );
