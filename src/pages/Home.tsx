@@ -4,12 +4,16 @@ import { TNavigationScreenProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
 import { StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useState } from 'react';
 
 import CircularProgress from 'react-native-circular-progress';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 export const Home = () => {
     const navigation = useNavigation<TNavigationScreenProps>();
+
+    const [isRunning, setIsRunning] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     return (
         <View style={styles.mainContainer}>
@@ -81,43 +85,65 @@ export const Home = () => {
                 </View>
 
                 {/* Botão Iniciar */}
+                {!isRunning && (
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.primaryButton}>
+                    <TouchableOpacity
+                        style={styles.primaryButton}
+                        onPress={() => setIsRunning(true)}
+                    >
                         <Text style={styles.primaryButtonText}>
                             Iniciar
                         </Text>
                     </TouchableOpacity>
                 </View>
+                )}
 
-                {/* Botôes Pausar e Parar */}
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.primaryButton}>
-                        <Text style={styles.primaryButtonText}>
-                            Pausar
-                        </Text>
-                    </TouchableOpacity>
+                {/* Botões Pausar e Parar */}
 
-                    <TouchableOpacity style={styles.secondaryButton}>
-                        <Text style={styles.secondaryButtonText}>
-                            Parar
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                {isRunning && !isPaused && (
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.primaryButton}
+                            onPress={() => setIsPaused(true)}
+                        >                
+                            <Text style={styles.primaryButtonText}>
+                                Pausar
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.secondaryButton}
+                            onPress={() => setIsRunning(false)}
+                        >
+                            <Text style={styles.secondaryButtonText}>
+                                Parar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 {/* Botôes Continuar e Reiniciar */}
+                {isRunning && isPaused && (
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.primaryButton}>
+                    <TouchableOpacity
+                        style={styles.primaryButton}
+                        onPress={() => setIsPaused(false)}
+                    >
                         <Text style={styles.primaryButtonText}>
                             Continuar
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.secondaryButton}>
+                    <TouchableOpacity
+                        style={styles.secondaryButton}
+                        onPress={() => {setIsPaused(false); setIsRunning(false)}}
+                    >
                         <Text style={styles.secondaryButtonText}>
                             Reiniciar
                         </Text>
                     </TouchableOpacity>
                 </View>
+                )}
 
                 {/* Pomodoros */}
                 <View style={styles.pomodorosContainer}>
