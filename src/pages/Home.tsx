@@ -4,7 +4,7 @@ import { TNavigationScreenProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
 import { StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CircularProgress from 'react-native-circular-progress';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -12,8 +12,22 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 export const Home = () => {
     const navigation = useNavigation<TNavigationScreenProps>();
 
+    const [step, setStep] = useState<1 | 2 | 3 | 4>(3);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+
+    const [currentCircleTime] = useState(25 * 60);
+    const [counterCircleTime, setCounterCircleTime] = useState(25 * 60);
+
+    useEffect(() => {
+        if(!isRunning || isPaused) return;
+
+        const ref = setInterval(() => {
+            setCounterCircleTime(old => old <= 0 ? old : old - 1);
+        }, 1000);
+
+        return () => clearInterval(ref);
+    }, [isRunning, isPaused]);
 
     return (
         <View style={styles.mainContainer}>
@@ -35,35 +49,35 @@ export const Home = () => {
 
                     {/* STATES */}
                     <View>
+                        {!isRunning && (
                         <View style={styles.stateContainer}>
                             <Text style={styles.stateText}>
                                 Vamos nos concentrar?
                             </Text>
                         </View>
+                        )}
+                        {isRunning &&(
+                            <>
+                                {!isPaused && (
+                                <Text style={styles.stateText}>
+                                    Hora de se concentrar!
+                                </Text>
+                                )}
+                                {isPaused && (
+                                <Text style={styles.stateText}>
+                                    Cronômetro em pausa
+                                </Text>
+                                )}
 
-                        <View style={styles.stateContainer}>
-                            <Text style={styles.stateText}>
-                                Hora de se concentrar!
-                            </Text>
-                        </View>
-
-                        <View style={styles.stateContainer}>
-                            <Text style={styles.stateText}>
-                                Pausa curta
-                            </Text>
-                        </View>
-
-                        <View style={styles.stateContainer}>
-                            <Text style={styles.stateText}>
-                                Pausa longa
-                            </Text>
-                        </View>
-
-                        <View style={styles.stateContainer}>
-                            <Text style={styles.stateText}>
-                                Cronômetro em pausa
-                            </Text>
-                        </View>
+                                {/*  
+                                <Text style={styles.stateText}>
+                                    Pausa curta
+                                </Text>
+                                <Text style={styles.stateText}>
+                                    Pausa longa
+                                </Text> */}
+                            </>
+                        )}
                     </View>
 
                     {/* PROGRESS */}
@@ -71,13 +85,13 @@ export const Home = () => {
                         <AnimatedCircularProgress
                         size={160}
                         width={8}
-                        fill={43}
+                        fill={100 - (counterCircleTime / currentCircleTime) * 100}
                         tintColor={Theme.colors.divider}
                         rotation={0}
                         backgroundColor={Theme.colors.primary}
                         children={() => (
                             <Text style={styles.progressText}>
-                                12:45
+                                {Math.floor(counterCircleTime / 60)}:{(counterCircleTime % 60).toString().padStart(2, '0')}
                             </Text>
                         )}
                         />
@@ -99,7 +113,6 @@ export const Home = () => {
                 )}
 
                 {/* Botões Pausar e Parar */}
-
                 {isRunning && !isPaused && (
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
@@ -151,11 +164,10 @@ export const Home = () => {
                         Pomodoros: 
                     </Text>
 
-                    <View style={styles.pomodorosIndicatorComplete} />
-                    <View style={styles.pomodorosIndicatorComplete} />
-                    <View style={styles.pomodorosIndicatorComplete} />
-                    <View style={styles.pomodorosIndicatorIncomplete} />
-                    <View style={styles.pomodorosIndicatorIncomplete} />
+                    <View style={step >= 1 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
+                    <View style={step >= 2 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
+                    <View style={step >= 3 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
+                    <View style={step >= 4 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
                 </View>
             </View>
         </View>
@@ -249,13 +261,13 @@ const styles = StyleSheet.create({
     pomodorosIndicatorComplete: {
         width: 20,
         height: 20,
-        borderRadius: '100%',
+        borderRadius: 10,
         backgroundColor: Theme.colors.primary,
     },
-    pomodorosIndicatorIncomplete: {
+    pomodorosIndicator: {
         width: 20,
         height: 20,
-        borderRadius: '100%',
+        borderRadius: 10,
         backgroundColor: Theme.colors.divider,
     },
 })
