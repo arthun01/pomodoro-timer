@@ -29,6 +29,27 @@ export const Home = () => {
         return () => clearInterval(ref);
     }, [isRunning, isPaused]);
 
+
+    const handleStart = () => {
+        setIsRunning(true);
+    }
+
+    const handlePause = () => {
+        setIsPaused(true);
+    }
+
+    const handleStop = () => {
+        setStep(1);
+        setIsPaused(false);
+        setIsRunning(false);
+        setCounterCircleTime(currentCircleTime);
+    }
+
+    const handleContinue = () => {
+        setIsPaused(false);
+    }
+
+
     return (
         <View style={styles.mainContainer}>
             {/* Botão Settings */}
@@ -101,10 +122,7 @@ export const Home = () => {
                 {/* Botão Iniciar */}
                 {!isRunning && (
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={styles.primaryButton}
-                        onPress={() => setIsRunning(true)}
-                    >
+                    <TouchableOpacity style={styles.primaryButton} onPress={handleStart} >
                         <Text style={styles.primaryButtonText}>
                             Iniciar
                         </Text>
@@ -117,7 +135,7 @@ export const Home = () => {
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={styles.primaryButton}
-                            onPress={() => setIsPaused(true)}
+                            onPress={handlePause}
                         >                
                             <Text style={styles.primaryButtonText}>
                                 Pausar
@@ -140,7 +158,7 @@ export const Home = () => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.primaryButton}
-                        onPress={() => setIsPaused(false)}
+                        onPress={handleContinue}
                     >
                         <Text style={styles.primaryButtonText}>
                             Continuar
@@ -149,10 +167,10 @@ export const Home = () => {
 
                     <TouchableOpacity
                         style={styles.secondaryButton}
-                        onPress={() => {setIsPaused(false); setIsRunning(false)}}
+                        onPress={handleStop}
                     >
                         <Text style={styles.secondaryButtonText}>
-                            Reiniciar
+                            Parar
                         </Text>
                     </TouchableOpacity>
                 </View>
