@@ -4,7 +4,7 @@ import { TNavigationScreenProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
 import { StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import CircularProgress from 'react-native-circular-progress';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -12,22 +12,61 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 export const Home = () => {
     const navigation = useNavigation<TNavigationScreenProps>();
 
-    const [step, setStep] = useState<1 | 2 | 3 | 4>(3);
+    const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
 
-    const [currentCircleTime] = useState(25 * 60);
+    const [currentFocusCircleTime] = useState(25 * 60);
+    const [currentShortBreakCircleTime] = useState(5 * 60);
+    const [currentLongBreakCircleTime] = useState(15 * 60);
+
     const [counterCircleTime, setCounterCircleTime] = useState(25 * 60);
+
+    const [currentStatus, setCurrentStatus] = useState<'focus' | 'short_break' | 'long_break'>('focus');
 
     useEffect(() => {
         if(!isRunning || isPaused) return;
 
         const ref = setInterval(() => {
-            setCounterCircleTime(old => old <= 0 ? old : old - 1);
+            setCounterCircleTime(old => old <= 0 ? old : old - 100);
         }, 1000);
 
         return () => clearInterval(ref);
     }, [isRunning, isPaused]);
+
+    useEffect(() => {
+
+        switch (currentStatus){
+            case 'focus':{
+                    if(counterCircleTime > 0) break;
+
+                    if(step < 4){
+                        setStep(old => (old + 1) as 1);
+                        setCurrentStatus('short_break');
+                        setCounterCircleTime(currentShortBreakCircleTime);
+                    } else {
+                        setStep(1);
+                        setCurrentStatus('long_break');
+                        setCounterCircleTime(currentLongBreakCircleTime);
+                    }
+                }
+                break;
+
+            case 'short_break':
+            case 'long_break':    
+            {
+                if(counterCircleTime <= 0){
+                    setCurrentStatus('focus');
+                    setCounterCircleTime(currentFocusCircleTime);
+                }
+            }
+                break;
+
+            default: break;
+        }
+
+    }, [currentLongBreakCircleTime ,currentFocusCircleTime, currentStatus, step, currentShortBreakCircleTime, currentStatus, counterCircleTime]);
+
 
 
     const handleStart = () => {
@@ -42,13 +81,21 @@ export const Home = () => {
         setStep(1);
         setIsPaused(false);
         setIsRunning(false);
-        setCounterCircleTime(currentCircleTime);
+        setCounterCircleTime(currentFocusCircleTime);
     }
 
     const handleContinue = () => {
         setIsPaused(false);
     }
 
+    const timeProgress = useMemo(() => {
+        switch (currentStatus){
+            case 'focus': return 100 - (counterCircleTime / currentFocusCircleTime) * 100;
+            case 'short_break': return 100 - (counterCircleTime / currentShortBreakCircleTime) * 100;
+            case 'long_break': return 100 - (counterCircleTime / currentLongBreakCircleTime) * 100;
+            default: return 0;
+        }
+    }, [currentStatus, counterCircleTime, currentFocusCircleTime, currentShortBreakCircleTime, currentLongBreakCircleTime]);
 
     return (
         <View style={styles.mainContainer}>
@@ -79,24 +126,29 @@ export const Home = () => {
                         )}
                         {isRunning &&(
                             <>
-                                {!isPaused && (
-                                <Text style={styles.stateText}>
-                                    Hora de se concentrar!
-                                </Text>
-                                )}
-                                {isPaused && (
-                                <Text style={styles.stateText}>
-                                    Cronômetro em pausa
-                                </Text>
-                                )}
+                                <View style={styles.stateContainer}>
+                                    {!isPaused && currentStatus === 'focus' && (
+                                    <Text style={styles.stateText}>
+                                        Hora de se concentrar!
+                                    </Text>
+                                    )}
+                                    {isPaused && (
+                                    <Text style={styles.stateText}>
+                                        Cronômetro em pausa
+                                    </Text>
+                                    )}
 
-                                {/*  
-                                <Text style={styles.stateText}>
-                                    Pausa curta
-                                </Text>
-                                <Text style={styles.stateText}>
-                                    Pausa longa
-                                </Text> */}
+                                    {!isPaused && currentStatus === 'short_break' && (
+                                        <Text style={styles.stateText}>
+                                            Pausa curta
+                                        </Text>
+                                    )}
+                                    {!isPaused && currentStatus === 'long_break' && (
+                                        <Text style={styles.stateText}>
+                                            Pausa longa
+                                        </Text>
+                                    )}
+                                </View>
                             </>
                         )}
                     </View>
@@ -106,7 +158,7 @@ export const Home = () => {
                         <AnimatedCircularProgress
                         size={160}
                         width={8}
-                        fill={100 - (counterCircleTime / currentCircleTime) * 100}
+                        fill={timeProgress}
                         tintColor={Theme.colors.divider}
                         rotation={0}
                         backgroundColor={Theme.colors.primary}
@@ -182,10 +234,10 @@ export const Home = () => {
                         Pomodoros: 
                     </Text>
 
-                    <View style={step >= 1 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
                     <View style={step >= 2 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
                     <View style={step >= 3 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
                     <View style={step >= 4 ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
+                    <View style={step === 1 && currentStatus === 'long_break' ? styles.pomodorosIndicatorComplete : styles.pomodorosIndicator} />
                 </View>
             </View>
         </View>
