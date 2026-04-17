@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { TNavigationScreenProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
@@ -15,7 +16,9 @@ export const Settings = () => {
     const [focusPeriod, setFocusPeriod] = useState(25);
     const [shortBreakPeriod, setShortBreakPeriod] = useState(5);
     const [longBreakPeriod, setLongBreakPeriod] = useState(15);
-    const [notificationsPeriod, setNotificationsPeriod] = useState(true);
+    const [notificationsActivated, setNotificationsActivated] = useState(true);
+
+
 
     return (
         <View style={styles.mainContainer}>
@@ -147,8 +150,8 @@ export const Settings = () => {
 
                         <View style={styles.formFieldButtons}>
                             <TouchableOpacity
-                                style={notificationsPeriod === false ? styles.primaryButton : styles.secondaryButton}
-                                onPress={() => setNotificationsPeriod(false)}
+                                style={notificationsActivated === false ? styles.primaryButton : styles.secondaryButton}
+                                onPress={() => setNotificationsActivated(false)}
                             >
                                 <Text style={styles.primaryButtonText}>
                                     Desativado  
@@ -156,8 +159,8 @@ export const Settings = () => {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={notificationsPeriod === true ? styles.primaryButton : styles.secondaryButton}
-                                onPress={() => setNotificationsPeriod(true)}
+                                style={notificationsActivated === true ? styles.primaryButton : styles.secondaryButton}
+                                onPress={() => setNotificationsActivated(true)}
                             >
                                 <Text style={styles.primaryButtonText}>
                                     Ativado
