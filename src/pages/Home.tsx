@@ -24,6 +24,8 @@ export const Home = () => {
 
     const [currentStatus, setCurrentStatus] = useState<'focus' | 'short_break' | 'long_break'>('focus');
 
+    
+
     useEffect(() => {
         if(!isRunning || isPaused) return;
 
